@@ -12,7 +12,7 @@ html {
 }
 body {
     min-height: 100vh;
-    background-image: linear-gradient( to right bottom, #1947ffee,#4f19ffee, #7919ffee,#e019ffee );
+    background-image: linear-gradient( to right bottom, #3b19ffee,#6a1dc8ee, #dc19ffee,#ff28a2ee );
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,11 +26,56 @@ body {
 
 .dispaly{
     color: rgb(255, 255, 255);
-    padding:2px;
-    box-shadow: -8px -10px 7px -6px rgba(0,0,0,0.75);-webkit-box-shadow: -8px -10px 7px -6px rgba(0,0,0,0.75);-moz-box-shadow: -8px -10px 7px -6px rgba(0,0,0,0.75);
+    margin-bottom: 5px;
     width: 100%;
-    min-height: 20%;
+    min-height: 30%;
     min-height: min-content;
-    background-color: #4b39ef;
+    background-color: #00000a20;
+    color: white;
+    word-break: break-all;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px;
+    
 
+}
+
+.firstNumber {
+   color: rgb(204, 207, 209);
+    font-size: 15px;
+    padding-right: 10px;
+}
+
+.nextNumber{
+    color: rgb(255, 255, 255);
+    font-size: 30px;
+    margin: 10px;
+
+}
+
+.buttons{
+    height: 60%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows:repeat(5, 1fr);
+    gap: 2px;
+    
+}
+
+
+.buttons button {
+    font-size: 25px;
+    background-color: rgba(134, 15, 48, 0.303);
+    color: rgb(204, 207, 209);
+    border-radius: 10px;
+}
+
+.calculator {
+background-color: rgba(221, 153, 205, 0.105);
+padding: 10px;
+border-radius: 10px;
 }
