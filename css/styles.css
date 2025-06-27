@@ -1,36 +1,49 @@
-*, ::before, ::after {
+*,
+::before,
+::after {
     padding: 0;
     margin: 0;
-    box-sizing: border-box; 
-
+    box-sizing: border-box;
 }
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 html {
     font-family: "Montserrat", sans-serif;
+    font-size: 16px; /* Bazowy rozmiar dla rem, do skalowania w media queries */
 }
+
 body {
     min-height: 100vh;
-    background-image: linear-gradient( to right bottom, #3b19ffee,#6a1dc8ee, #dc19ffee,#ff28a2ee );
+    background-image: linear-gradient(to right bottom, #3d158e, #932ef7e0, #f42ef7b6, #cc20dc5a);
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; /* Wyśrodkowanie całości w pionie */
+    gap: 1.5rem; /* Odstęp między kalkulatorem a historią */
+    padding: 2rem; /* Wewnętrzny odstęp od krawędzi okna */
+    flex-wrap: wrap; /* Pozwala elementom zawijać się na mniejszych ekranach */
+    align-content: center; /* Wyśrodkowuje zawinięte bloki w pionie */
 }
 
-.calculator{
-    height: 60vh;
-    min-width: 370px;
-    max-width: 370px;
+.calculator {
+    background-color: rgba(100, 5, 64, 0.222);
+    padding: 1.5rem; /* Wewnętrzny odstęp od krawędzi kalkulatora */
+    border-radius: 10px;
+
+    width: 25rem; /* Bazowa szerokość kalkulatora na dużym ekranie */
+    height: 33rem; /* Bazowa wysokość kalkulatora na dużym ekranie */
+
+    display: flex;
+    flex-direction: column; /* Układ pionowy dla wyświetlacza i przycisków */
+    gap: 1rem; /* Odstęp między wyświetlaczem a kontenerem przycisków */
 }
 
-.dispaly{
+.dispaly {
     color: rgb(255, 255, 255);
-    margin-bottom: 5px;
     width: 100%;
-    min-height: 30%;
-    min-height: min-content;
-    background-color: #00000a20;
+    height: 8rem; /* Stała wysokość wyświetlacza */
+    padding: 0.5rem 1.5rem; /* Wewnętrzny odstęp dla tekstu w wyświetlaczu */
+    background-color: #00000a89;
     color: white;
     word-break: break-all;
     text-align: right;
@@ -38,44 +51,204 @@ body {
     flex-direction: column;
     justify-content: space-between;
     font-weight: bold;
-    padding: 10px;
-    border-radius: 5px;
-    
-
+    border-radius: 10px;
+    flex-shrink: 0; /* Zapobiega kurczeniu się wyświetlacza */
 }
 
 .firstNumber {
-   color: rgb(204, 207, 209);
-    font-size: 15px;
-    padding-right: 10px;
+    color: rgb(204, 207, 209);
+    font-size: 1.1rem; /* Rozmiar tekstu mniejszych liczb */
+    padding-top: 0.5rem;
+    padding-right: 0rem;
 }
 
-.nextNumber{
+.nextNumber {
     color: rgb(255, 255, 255);
-    font-size: 30px;
-    margin: 10px;
-
+    font-size: 1.8rem; /* Rozmiar tekstu głównych liczb */
+    padding-bottom: 0.5rem;
+    padding-right: 0rem;
 }
 
-.buttons{
-    height: 60%;
+.container-buttons {
+    flex-grow: 1; /* Kontener przycisków zajmuje resztę pionowej przestrzeni */
+    display: flex;
+    justify-content: center; /* Wyśrodkowanie grida przycisków horyzontalnie */
+    align-items: center; /* Wyśrodkowanie grida przycisków pionowo */
+    padding: 0 1.5rem; /* Padding z lewej/prawej, aby dopasować do kalkulatora */
+}
+
+.buttons {
+    width: 100%; /* Siatka przycisków zajmuje całą dostępną szerokość w kontenerze */
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows:repeat(5, 1fr);
-    gap: 2px;
-    
+    grid-template-columns: repeat(4, 1fr); /* 4 równe kolumny */
+    grid-template-rows: repeat(5, minmax(3.5rem, 1fr)); /* 5 wierszy, min. 3.5rem, potem równe rozłożenie */
+    gap: 0.5rem; /* Odstępy między przyciskami */
 }
-
 
 .buttons button {
-    font-size: 25px;
-    background-color: rgba(134, 15, 48, 0.303);
+    font-size: 1.2rem; /* Rozmiar czcionki przycisków */
+    background-color: rgba(125, 31, 144, 0.926);
     color: rgb(204, 207, 209);
     border-radius: 10px;
+    border: none;
+    cursor: pointer;
 }
 
-.calculator {
-background-color: rgba(221, 153, 205, 0.105);
-padding: 10px;
-border-radius: 10px;
+button[aria-label="plus"] {
+    grid-row: span 2; /* Przycisk plus rozciąga się na 2 wiersze */
+}
+
+.calculator-history {
+    list-style: none;
+    background-color: rgba(149, 8, 170, 0.16);
+    padding: 1rem;
+    border-radius: 10px;
+
+    width: 15rem; /* Szerokość panelu historii */
+    height: 33rem; /* Wysokość panelu historii (taka sama jak kalkulator) */
+
+    min-width: unset;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    overflow-y: auto;
+}
+
+.history-title {
+    padding-bottom: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.history-btn {
+    color: rgba(255, 255, 255, 0.695);
+    text-wrap: inherit;
+    background-color: rgba(18, 169, 219, 0.484);
+    padding: 0.4rem 0.8rem;
+    margin-left: 0.8rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+}
+
+.history {
+    list-style: none;
+    flex-grow: 1;
+    padding-top: 1rem;
+}
+
+.history li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.8rem;
+}
+
+.history li:last-child {
+    border-bottom: none;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 0.8rem;
+}
+
+/* Media Queries - skalowanie całego układu */
+
+/* Dla ekranów o szerokości do 1920px */
+@media (max-width: 1920px) {
+    html {
+        font-size: 15px; /* Skalowanie bazowego font-size w dół */
+    }
+}
+
+/* Dla ekranów o szerokości do 1440px */
+@media (max-width: 1440px) {
+    html {
+        font-size: 14px;
+    }
+    body {
+        gap: 1rem;
+        padding: 1.5rem;
+    }
+}
+
+/* Dla ekranów o szerokości do 1024px */
+@media (max-width: 1024px) {
+    html {
+        font-size: 13px;
+    }
+    body {
+        gap: 0.8rem;
+        padding: 1.2rem;
+    }
+}
+
+/* Dla ekranów o szerokości do 768px (tablety pionowo, telefony poziomo) */
+@media (max-width: 768px) {
+    html {
+        font-size: 12px;
+    }
+    body {
+        flex-direction: column; /* Historia spada pod kalkulator */
+        align-items: center;
+        gap: 1.5rem; /* Odstęp, gdy elementy są w kolumnie */
+        padding: 1rem;
+    }
+
+    .calculator {
+        height: auto; /* Wysokość auto, by dopasować do zawartości */
+        min-height: 29rem; /* Minimalna wysokość, aby zmieścić przyciski */
+        width: 100%;
+        max-width: 25rem; /* Ogranicza szerokość na mniejszych ekranach */
+        padding: 1.2rem;
+    }
+
+    .dispaly {
+        height: 7rem;
+        padding: 0.5rem 1.2rem; /* Dostosowanie paddingu wyświetlacza */
+    }
+
+    .calculator-history {
+        height: auto;
+        min-height: 15rem;
+        width: 100%;
+        max-width: 25rem;
+        margin-top: 1.5rem; /* Odstęp od kalkulatora */
+        padding: 1rem;
+    }
+}
+
+/* Dla ekranów o szerokości do 440px (bardzo małe telefony) */
+@media (max-width: 440px) {
+    html {
+        font-size: 11px;
+    }
+    body {
+        padding: 0.8rem;
+        gap: 1rem;
+    }
+    .calculator {
+        min-height: 27rem;
+        max-width: 95vw; /* Pozwala na szerszy kalkulator na bardzo małych telefonach */
+        padding: 1rem;
+    }
+    .dispaly {
+        height: 6rem;
+        padding: 0.5rem 1rem;
+    }
+    .buttons button {
+        font-size: 1.1rem;
+    }
+    .calculator-history {
+        min-height: 12rem;
+        max-width: 95vw;
+        margin-top: 1rem;
+        padding: 0.8rem;
+    }
 }
