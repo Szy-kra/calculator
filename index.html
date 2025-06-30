@@ -4,23 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="css/styles.css" />
-    <title>calculator_Javascript</title>
+    <title>Kalkulator JavaScript</title>
   </head>
   <body>
     <div class="calculator">
       <div class="dispaly">
-        <div class="firstNumber">
-          <p>
-            123
-            <span class="mathSign">+</span>
-          </p>
+        <div class="previous-display-container">
+          <span class="previous-number-text"></span>
+          <span class="math-sign"></span>
         </div>
-        <div class="nextNumber">452226</div>
+        <div class="current-number"></div>
       </div>
 
-      <div class="buttons">
-        <button class="operator">AC</button>
-        <button class="operator">⌫</button>
+      <div class="buttons-panel">
+        <button class="clear-display">AC</button>
+        <button class="undo-btn">➤</button>
         <button class="operator">%</button>
         <button class="operator">÷</button>
         <button class="number">7</button>
@@ -35,7 +33,7 @@
         <button class="number">2</button>
         <button class="number">3</button>
         <button class="operator" aria-label="plus">+</button>
-        <button class="equals">=</button>
+        <button class="operator">=</button>
         <button class="number">0</button>
         <button class="number">,</button>
       </div>

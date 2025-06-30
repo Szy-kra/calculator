@@ -55,29 +55,22 @@ body {
     flex-shrink: 0; /* Zapobiega kurczeniu się wyświetlacza */
 }
 
-.firstNumber {
+.previous-number {
     color: rgb(204, 207, 209);
-    font-size: 1.1rem; /* Rozmiar tekstu mniejszych liczb */
+    font-size: 4rem; /* Rozmiar tekstu mniejszych liczb */
     padding-top: 0.5rem;
     padding-right: 0rem;
 }
 
-.nextNumber {
+.current-number {
+    
     color: rgb(255, 255, 255);
-    font-size: 1.8rem; /* Rozmiar tekstu głównych liczb */
+    font-size: 2rem; /* Rozmiar tekstu głównych liczb */
     padding-bottom: 0.5rem;
     padding-right: 0rem;
 }
 
-.container-buttons {
-    flex-grow: 1; /* Kontener przycisków zajmuje resztę pionowej przestrzeni */
-    display: flex;
-    justify-content: center; /* Wyśrodkowanie grida przycisków horyzontalnie */
-    align-items: center; /* Wyśrodkowanie grida przycisków pionowo */
-    padding: 0 1.5rem; /* Padding z lewej/prawej, aby dopasować do kalkulatora */
-}
-
-.buttons {
+.buttons-panel {
     width: 100%; /* Siatka przycisków zajmuje całą dostępną szerokość w kontenerze */
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 4 równe kolumny */
@@ -85,7 +78,7 @@ body {
     gap: 0.5rem; /* Odstępy między przyciskami */
 }
 
-.buttons button {
+.buttons-panel button {
     font-size: 1.2rem; /* Rozmiar czcionki przycisków */
     background-color: rgba(125, 31, 144, 0.926);
     color: rgb(204, 207, 209);
@@ -129,7 +122,7 @@ button[aria-label="plus"] {
     background-color: rgba(18, 169, 219, 0.484);
     padding: 0.4rem 0.8rem;
     margin-left: 0.8rem;
-    border-radius: 5px;
+    border-radius: 10px;
     border: none;
     cursor: pointer;
     flex-shrink: 0;
@@ -242,7 +235,7 @@ hr {
         height: 6rem;
         padding: 0.5rem 1rem;
     }
-    .buttons button {
+    .buttons-panel button {
         font-size: 1.1rem;
     }
     .calculator-history {
