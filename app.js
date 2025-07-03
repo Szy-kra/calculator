@@ -1,186 +1,179 @@
-//display
+// --- SELEKTORY ELEMENTÓW DOM ---
 const currentNr = document.querySelector('.current-number');
-const previousNr = document.querySelector('.previous-number-text'); // Poprawiony selektor
+const previousNr = document.querySelector('.previous-number-text');
 const mathSign = document.querySelector('.math-sign');
 const calcHistory = document.querySelector('.history');
 
-//buttons
 const numbersBtn = document.querySelectorAll('.number');
-const operatorsBtn = document.querySelectorAll('.operator'); // Teraz zawiera też '='
+const operatorsBtn = document.querySelectorAll('.operator');
 const clearDisBtn = document.querySelector('.clear-display');
 const undoBtn = document.querySelector('.undo-btn');
 const clearHisBtn = document.querySelector('.history-btn');
 
-currentNr.innerHTML = '0'; // Domyślny stan początkowy currentNr
-let result = ''; // Globalna zmienna na wynik obliczeń
-
-
-//--------------------------------------------------------
-function clearDisplay(){
-    currentNr.innerHTML ='0'; // Zawsze ustawia currentNr na '0' po wyczyszczeniu
-    previousNr.innerHTML ='';
-    mathSign.innerHTML ='';
-    result === '0';
-}
+// --- ZMIENNE GLOBALNE STANU ---
+currentNr.innerHTML = '0';
+let result = '';
+let operateString = '';
 
 //--------------------------------------------------------
-function undoNumber(){
-    // Jeśli na wyświetlaczu jest tylko '0' lub '-0', po cofnięciu nadal powinno być '0'
-    if (currentNr.innerHTML === '0' || currentNr.innerHTML === '-0') {
-        currentNr.innerHTML = '0';
-        return;
+// FUNKCJE
+//--------------------------------------------------------
+
+// Formatuje ciąg znaków liczby, wstawiając spacje jako separatory tysięcy.
+function formatNumber(numberString) {
+    if (numberString === null || typeof numberString === 'undefined') {
+        return '';
     }
-    
-    // Usuwamy ostatni znak
-    currentNr.innerHTML = currentNr.innerHTML.slice(0, -1);
+    const string = numberString.toString();
+    const parts = string.split('.');
+    const integerPart = parts[0];
+    const decimalPart = parts.length > 1 ? '.' + parts[1] : '';
+    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    return formattedInteger + decimalPart;
+}
 
-    // Jeśli po usunięciu znaku currentOperand staje się pusty lub tylko '-', ustaw go na '0'
-    if (currentNr.innerHTML === '' || currentNr.innerHTML === '-') {
-        currentNr.innerHTML = '0';
+// Resetuje kalkulator do stanu początkowego.
+function clearDisplay() {
+    currentNr.innerHTML = '0';
+    previousNr.innerHTML = '';
+    mathSign.innerHTML = '';
+    result = '';
+    operateString = '';
+}
+
+// Implementuje funkcjonalność przycisku "cofnij".
+function undoNumber() {
+    let cleanNumber = currentNr.innerHTML.replace(/\s/g, '');
+    if (cleanNumber.length > 1 && cleanNumber !== '-0') {
+        cleanNumber = cleanNumber.slice(0, -1);
+    } else {
+        cleanNumber = '0';
     }
+    currentNr.innerHTML = formatNumber(cleanNumber);
 }
 
-//--------------------------------------------------------
-function clearHistory(){
-    // Logika do czyszczenia historii (jeśli zaimplementowana)
+// Czyści historię obliczeń.
+function clearHistory() {
+    calcHistory.innerHTML = '';
 }
 
-function showResult(){
-    // Strażnik: Jeśli poprzednia liczba lub operator jest pusty, nie wykonuj obliczeń
-    // (currentNr.innerHTML jest zawsze '0' lub liczbą)
+// Wykonuje główną operację matematyczną na podstawie zapisanych liczb i operatora.
+function showResult() {
     if (previousNr.innerHTML === '' || mathSign.innerHTML === '') {
         return;
     }
-
-    // Pobieramy wartości z wyświetlaczy (bez konwersji przecinka na kropkę)
-    let a = parseFloat(previousNr.innerHTML); 
-    let b = parseFloat(currentNr.innerHTML);   
+    let a = parseFloat(previousNr.innerHTML.replace(/\s/g, ''));
+    let b = parseFloat(currentNr.innerHTML.replace(/\s/g, ''));
     let operate = mathSign.innerHTML;
-    
-    // Strażnik: Obsługa wartości nienumerycznych, które mogą powstać z błędnego wprowadzania
-    if (isNaN(a) || isNaN(b)) {
-        // Specjalny przypadek dla '%', jeśli 'a' jest liczbą, ale 'b' jest NaN (np. "50 % =")
-        if (operate === '%' && !isNaN(a)) {
-             result = a * 0.01;
-        } else {
-             currentNr.innerHTML = '0';
-             previousNr.innerHTML = '';
-             mathSign.innerHTML = '';
-             return;
-        }
-    }
 
-    // Wykonanie operacji na podstawie operatora
-    switch(operate){
-        case '+':
-            result = a + b;
-            break;
-        case '-':
-            result = a - b;
-            break;
-        case '×':
-            result = a * b;
-            break;
+    if (isNaN(a) || isNaN(b)) return;
+
+    switch (operate) {
+        case '+': result = a + b; break;
+        case '-': result = a - b; break;
+        case '×': result = a * b; break;
         case '÷':
             if (b === 0) {
-                currentNr.innerHTML = '0';
+                currentNr.innerHTML = 'Error';
                 previousNr.innerHTML = '';
                 mathSign.innerHTML = '';
                 return;
-            } else {
-                result = a / b;
             }
+            result = a / b;
             break;
-        case '%': // Działanie procentu: b * 0.01
-            result = b * 0.01;
-            break;
-        default: // Nieznany operator
-            currentNr.innerHTML = '0';
-            previousNr.innerHTML = '';
-            mathSign.innerHTML = '';
-            return;
+        default: return;
     }
-
-
-    previousNr.innerHTML = String(result); 
-    currentNr.innerHTML = String(result);// Wyświetl wynik w previousNr
-    mathSign.innerHTML = '';               // Wyczyść znak operatora
+    operateString = `${formatNumber(a)} ${operate} ${formatNumber(b)} =`;
+    result = Math.round(result * 10000000) / 10000000;
 }
 
-//--------------------------------------------------------
-function operate(){
+// --- FUNKCJA Z NANİESİONĄ, OSTATECZNĄ POPRAWKĄ DLA PROCENTÓW ---
+// Obsługuje zdarzenia kliknięcia dla wszystkich przycisków operatorów.
+function operate() {
+    const operator = this.textContent;
 
-   
-    // 2. Jeśli currentNr jest tylko '-' i naciśnięto inny operator, wróć.
+    // Specjalna obsługa procentów z rozróżnieniem operatorów.
+    if (operator === '%') {
+        if (previousNr.innerHTML === '' || mathSign.innerHTML === '') return;
+        
+        const a = parseFloat(previousNr.innerHTML.replace(/\s/g, ''));
+        const b = parseFloat(currentNr.innerHTML.replace(/\s/g, ''));
+        const previousOp = mathSign.innerHTML;
+
+        if (isNaN(a) || isNaN(b)) return;
+        
+        let percentageValue;
+
+        if (previousOp === '+' || previousOp === '-') {
+            // Dla + i - liczymy procent z pierwszej liczby (a).
+            percentageValue = (a * b) / 100;
+        } else if (previousOp === '×' || previousOp === '÷') {
+            // Dla × i ÷ zamieniamy drugą liczbę (b) na ułamek.
+            percentageValue = b / 100;
+        } else {
+            return;
+        }
+
+        currentNr.innerHTML = formatNumber(percentageValue.toString());
+        return;
+    }
+
+    if (currentNr.innerHTML === '0' && operator === '-') {
+        currentNr.innerHTML = '-';
+        return;
+    }
     if (currentNr.innerHTML === '-') {
         return;
     }
 
-    // Flaga: true, jeśli showResult() właśnie wykonało obliczenie
-    let calculationJustPerformed = false; 
-
-    // 3. Jeśli jest już poprzednia operacja (poprzednia liczba i operator są ustawione), wykonaj ją
-    if (previousNr.innerHTML !== '' && mathSign.innerHTML !== '') {
-        showResult(); 
-        calculationJustPerformed = true; // Ustaw flagę na true po wykonaniu obliczenia
+    if (operator === '=') {
+        if (previousNr.innerHTML === '' || mathSign.innerHTML === '') return;
+        showResult();
+        currentNr.innerHTML = formatNumber(result);
+        previousNr.innerHTML = operateString;
+        mathSign.innerHTML = '';
+    } else {
+        const cleanPrevious = previousNr.innerHTML.replace(/\s/g, '');
+        if (cleanPrevious !== '' && mathSign.innerHTML) {
+            showResult();
+            previousNr.innerHTML = formatNumber(result);
+            currentNr.innerHTML = '0';
+            mathSign.innerHTML = operator;
+        } else {
+            previousNr.innerHTML = formatNumber(currentNr.innerHTML.replace(/\s/g, ''));
+            mathSign.innerHTML = operator;
+            currentNr.innerHTML = '0';
+        }
     }
-
-    // 4. Jeśli obliczenie NIE zostało wykonane, przenieś bieżącą liczbę do previousNr.
-    // Dzieje się tak tylko dla PIERWSZEGO operatora w sekwencji (np. "5 +").
-    if (!calculationJustPerformed) {
-        previousNr.innerHTML = currentNr.innerHTML; // Aktualna liczba staje się poprzednią
-    } 
-    // Jeśli showResult() zostało wywołane, previousNr już zawiera wynik, a currentNr jest '0'.
-    // Nie musimy ponownie przenosić currentNr do previousNr.
-
-            // Resetuj currentNr do '0' dla nowej liczby
-       // Ustaw nowy operator
-
-    mathSign.innerHTML = this.textContent;  
-    currentNr.innerHTML=String(result);
-    
-} // <--- TUTAJ BRAKOWAŁO TEGO NAWIASU KLAMROWEGO '}'
-
-
-//--------------------------------------------------------
-function dispalyNumbers(){
-
-    // 1. Zabezpieczenie przed wieloma kropkami: Jeśli już jest kropka, ignoruj kolejną.
-    if (this.textContent === '.' && currentNr.innerHTML.includes('.')) {
-        return;
-    }
-
-    // 2. Jeśli currentNr jest '0' i użytkownik wpisze '0', nic nie rób (zapobiega "00", "000" itp.)
-    if (currentNr.innerHTML === '0' && this.textContent === '0') {
-        return;
-    }
-
-    // 3. Jeśli currentNr jest '0' ORAZ wprowadzana treść NIE JEST kropką ORAZ NIE JEST zerem, zastąp '0'
-    if (currentNr.innerHTML === '0' && this.textContent !== '.' && this.textContent !== '0') {
-        currentNr.innerHTML = this.textContent;
-        return;
-    }
-
-    // 4. Jeśli currentNr jest '0' i użytkownik wpisze '.', zrób '0.'
-    if (currentNr.innerHTML === '0' && this.textContent === '.') {
-        currentNr.innerHTML = '0.';
-        return;
-    }
-    // 5. Jeśli currentNr jest '-' i użytkownik wpisze '.' (np. '-' -> '.' rezultuje w '-0.')
-    if (currentNr.innerHTML === '-' && this.textContent === '.') {
-        currentNr.innerHTML = '-0.';
-        return;
-    }
-  
-    currentNr.innerHTML =  currentNr.innerHTML + this.textContent;
-    
-    // 6. W każdym innym przypadku: po prostu dodaj nową cyfrę/kropkę
-    
 }
 
-// Event Listeners
+// Obsługuje zdarzenia kliknięcia dla przycisków numerycznych i kropki dziesiętnej.
+function displayNumbers() {
+    const cleanNumber = currentNr.innerHTML.replace(/\s/g, '');
+
+    if (cleanNumber.length >= 15 && this.textContent !== '.') {
+        return;
+    }
+    if (this.textContent === '.' && cleanNumber.includes('.')) {
+        return;
+    }
+
+    let newNumberString;
+
+    if (cleanNumber === '0' && this.textContent !== '.') {
+        newNumberString = this.textContent;
+    } else if (cleanNumber === '-0' && this.textContent !== '.') {
+        newNumberString = '-' + this.textContent;
+    } else {
+        newNumberString = cleanNumber + this.textContent;
+    }
+
+    currentNr.innerHTML = formatNumber(newNumberString);
+}
+
+// --- NASŁUCHIWANIE ZDARZEŃ ---
 clearDisBtn.addEventListener('click', clearDisplay);
 undoBtn.addEventListener('click', undoNumber);
 clearHisBtn.addEventListener('click', clearHistory);
-operatorsBtn.forEach((button) => button.addEventListener('click', operate)); // Obsługuje wszystkie operatory, w tym '='
-numbersBtn.forEach((button) => button.addEventListener('click', dispalyNumbers));
+operatorsBtn.forEach((button) => button.addEventListener('click', operate));
+numbersBtn.forEach((button) => button.addEventListener('click', displayNumbers));
