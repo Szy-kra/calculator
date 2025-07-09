@@ -1,10 +1,9 @@
-![image](https://github.com/user-attachments/assets/31cea756-9716-44bd-b421-0104c386e15c)# calculator
+![image](https://github.com/user-attachments/assets/8601d921-3d66-4856-8322-66a4b6e86223)
+# calculator
 A simple calculator application built using vanilla JavaScript.
 # Kalkulator Webowy
 
 Prosty, ale w pełni funkcjonalny kalkulator webowy stworzony przy użyciu czystego JavaScriptu, HTML i CSS. Aplikacja posiada nowoczesny, responsywny interfejs oraz panel historii obliczeń.
-
-![image](https://github.com/user-attachments/assets/bdd63d4e-6474-4c1e-abd2-f0dac2f73bfd)
 
 ---
   
