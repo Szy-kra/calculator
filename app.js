@@ -85,7 +85,21 @@ function showResult() {
     }
     operateString = `${formatNumber(a)} ${operate} ${formatNumber(b)} =`;
     result = Math.round(result * 10000000) / 10000000;
+
+    //zapisywanie wyników w kolumnie 
+    const fullOperationText = `${operateString} ${formatNumber(result)}`;
+    addToHistory(fullOperationText);
 }
+
+function addToHistory(operationText) {
+    
+    const historyItem = document.createElement('li');
+    historyItem.textContent = operationText;
+    calcHistory.prepend(historyItem);
+}
+
+
+
 
 // --- FUNKCJA Z NANİESİONĄ, OSTATECZNĄ POPRAWKĄ DLA PROCENTÓW ---
 // Obsługuje zdarzenia kliknięcia dla wszystkich przycisków operatorów.

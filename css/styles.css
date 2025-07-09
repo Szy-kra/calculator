@@ -110,7 +110,7 @@ button[aria-label="plus"] {
 .history-title {
     padding-bottom: 0.8rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     font-weight: bold;
     font-size: 1rem;
